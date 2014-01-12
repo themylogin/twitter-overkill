@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime, timedelta
@@ -68,10 +69,10 @@ def cut_tweet(tweet):
     if tweet_length(tweet) <= 140:
         return tweet
 
-    while tweet_length(tweet + "...") > 140:
+    while tweet_length(tweet + "…") > 140:
         tweet = tweet[:-1]
 
-    return tweet + "..."
+    return tweet + "…"
 
 
 def tweet_length(tweet):

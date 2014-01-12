@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from testfixtures import replace
 import unittest
 
@@ -39,7 +42,7 @@ class CutTweetTestCase(unittest.TestCase):
     @replace("twitter_overkill.twitter.tweet_length", len)
     def test_long_tweet(self):
         long_tweet = "Hello. My name is Dmitry. " * 100
-        self.assertEqual(cut_tweet(long_tweet), long_tweet[:137] + "...")
+        self.assertEqual(cut_tweet(long_tweet), long_tweet[:139] + "…")
 
 
 class TweetLengthTestCase(unittest.TestCase):
