@@ -15,6 +15,9 @@ def tweet(twitter_api, tweet_variants):
     if not all(auth_list):
         raise twitter.TwitterError("API must be authenticated.")
 
+    if not tweet_variants:
+        return None
+
     if not isinstance(tweet_variants, list):
         tweet_variants = [tweet_variants]
 

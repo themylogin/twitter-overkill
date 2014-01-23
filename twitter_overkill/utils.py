@@ -43,7 +43,9 @@ def tweet_with_lists(tweet_variants, lists, *args, **kwargs):
             (True, True):   "Ем %s и пью %s"
         }
         """
-        tweet_variant = tweet_variants[tuple(map(lambda count: count > 0, lists_counts))]
+        tweet_variant = tweet_variants.get(tuple(map(lambda count: count > 0, lists_counts)))
+        if tweet_variant is None:
+            continue
 
         lists_slices = map(lambda list_, count: list_[:count], lists, lists_counts)
 
