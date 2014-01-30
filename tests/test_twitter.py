@@ -85,6 +85,10 @@ class UrlLengthTestCase(unittest.TestCase):
     def test_https_url(self):
         self.assertEqual(url_length("https://yandex.ru"), 6)
 
+    @replace("twitter_overkill.twitter.get_help_configuration", stub_get_help_configuration(10, 11))
+    def test_extremely_short_url_without_schema(self):
+        self.assertEqual(url_length("ya.ru"), 10)
+
     @replace("twitter_overkill.twitter.get_help_configuration", stub_get_help_configuration(20, 21))
     def test_not_shortened_url(self):
         url = "http://yandex.ru"

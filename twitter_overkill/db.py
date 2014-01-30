@@ -1,20 +1,15 @@
 from __future__ import absolute_import
 
 import json
-import operator
-from Queue import Queue
 from sqlalchemy import create_engine
 from sqlalchemy import Column
 from sqlalchemy import BigInteger, DateTime, Enum, PickleType, String, Text
-from sqlalchemy import literal
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import create_session
-from zope.interface import implements
 
 from twitter_overkill.config import config
 
 __all__ = ["get_connection",
-           "Tweet", "get_tweet","update_tweet"]
+           "Tweet", "get_tweet", "update_tweet"]
 
 Base = declarative_base()
 
@@ -27,7 +22,7 @@ class Tweet(Base):
     auth_list       = Column(PickleType(pickler=json))
     tweet_variants  = Column(PickleType(pickler=json))
     user            = Column(String(20))
-    tweet           = Column(String(140))
+    tweet           = Column(Text())
     state           = Column(Enum("temporary-error",
                                   "permanent-error",
                                   "posted"))
@@ -52,9 +47,9 @@ def get_tweet(connection, id):
 
 def update_tweet(connection, tweet):
     if tweet.id is None:
-        tweet.id = connection.execute(Tweet.__table__.insert().values(**tweet_to_dict(tweet))).inserted_primary_key
+        tweet.id = connection.execute(Tweet.__table__.insert().values(**tweet_to_dict(tweet))).inserted_primary_key[0]
     else:
-        connection.execute(Tweet.__table__.update().values(**tweet_to_dict(tweet)).where(Tweet.id == id))
+        connection.execute(Tweet.__table__.update().values(**tweet_to_dict(tweet)).where(Tweet.id == tweet.id))
 
 
 def tweet_to_dict(tweet):

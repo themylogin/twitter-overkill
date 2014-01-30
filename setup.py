@@ -13,9 +13,9 @@ setup(
     long_description=open("README.md").read(),
     install_requires=[
         "celery",
+        "PyExecJS",
         "python-twitter",
         "pyyaml",
-        "twitter-text-python",
     ],
     setup_requires=[
         "nose>=1.0",

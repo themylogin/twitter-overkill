@@ -2,11 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime, timedelta
-from ttp import ttp
 import twitter
+from urlparse import urlparse
 
 from twitter_overkill.celery import celery
+from twitter_overkill.config import config
 import twitter_overkill.db as db
+from twitter_overkill.twitter_text import extract_urls
 
 @celery.task
 def post_tweet(auth_list, tweet_variants, db_id=None):
@@ -39,6 +41,7 @@ def post_tweet(auth_list, tweet_variants, db_id=None):
                 if e.args[0][0]["code"] in [
                     32,     # Could not authenticate you
                     89,     # Invalid or expired token
+                    186,    # Status is over 140 characters
                     187,    # Status is a duplicate.
                 ]:
                     db_tweet.state = "permanent-error"
@@ -77,7 +80,7 @@ def cut_tweet(tweet):
 
 def tweet_length(tweet):
     length = len(tweet)
-    for url in ttp.Parser().parse(tweet).urls:
+    for url in extract_urls(tweet):
         length = length - len(url) + url_length(url)
 
     return length
@@ -85,6 +88,9 @@ def tweet_length(tweet):
 
 def url_length(url):
     help_configuration = get_help_configuration()
+
+    if urlparse(url).scheme == "":
+        url = "http://%s" % url
 
     if url.startswith("https://"):
         short_url_length = help_configuration["short_url_length_https"]
@@ -102,6 +108,10 @@ help_configuration = {"updated_at": datetime.min}
 
 def get_help_configuration():
     if datetime.now() - help_configuration["updated_at"] > timedelta(days=1):
-        help_configuration["configuration"] = twitter.Api().GetHelpConfiguration()
+        help_configuration["updated_at"] = datetime.now()
+        help_configuration["configuration"] = twitter.Api(config["consumer_key"],
+                                                          config["consumer_secret"],
+                                                          config["access_token_key"],
+                                                          config["access_token_secret"]).GetHelpConfiguration()
 
     return help_configuration["configuration"]
