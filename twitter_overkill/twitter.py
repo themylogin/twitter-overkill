@@ -3,12 +3,11 @@ from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime, timedelta
 import twitter
-from urlparse import urlparse
 
 from twitter_overkill.celery import celery
 from twitter_overkill.config import config
 import twitter_overkill.db as db
-from twitter_overkill.twitter_text import extract_urls
+from twitter_overkill.twitter_text import get_tweet_length
 
 @celery.task
 def post_tweet(auth_list, tweet_variants, db_id=None):
@@ -79,28 +78,7 @@ def cut_tweet(tweet):
 
 
 def tweet_length(tweet):
-    length = len(tweet)
-    for url in extract_urls(tweet):
-        length = length - len(url) + url_length(url)
-
-    return length
-
-
-def url_length(url):
-    help_configuration = get_help_configuration()
-
-    if urlparse(url).scheme == "":
-        url = "http://%s" % url
-
-    if url.startswith("https://"):
-        short_url_length = help_configuration["short_url_length_https"]
-    else:
-        short_url_length = help_configuration["short_url_length"]
-
-    if short_url_length < len(url):
-        return short_url_length
-    else:
-        return len(url)
+    return get_tweet_length(tweet, get_help_configuration())
 
 
 help_configuration = {"updated_at": datetime.min}

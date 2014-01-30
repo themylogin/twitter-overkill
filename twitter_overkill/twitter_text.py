@@ -8,4 +8,4 @@ _context = execjs.compile("""
     var twitter = require('twitter-text');
 """)
 
-extract_urls = lambda tweet: _context.call("twitter.extractUrls", tweet)
+get_tweet_length = lambda text, options: _context.call("twitter.getTweetLength", text, options)
