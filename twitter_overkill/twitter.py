@@ -86,10 +86,10 @@ help_configuration = {"updated_at": datetime.min}
 
 def get_help_configuration():
     if datetime.now() - help_configuration["updated_at"] > timedelta(days=1):
-        help_configuration["updated_at"] = datetime.now()
         help_configuration["configuration"] = twitter.Api(config["consumer_key"],
                                                           config["consumer_secret"],
                                                           config["access_token_key"],
                                                           config["access_token_secret"]).GetHelpConfiguration()
+        help_configuration["updated_at"] = datetime.now()
 
     return help_configuration["configuration"]

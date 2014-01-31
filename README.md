@@ -52,12 +52,18 @@ sudo aptitude install nodejs
 cd ~ && npm install twitter-text
 ```
 
-Для работы вам потребуется какой-нибудь брокер сообщений, совместимый с [Celery](http://www.celeryproject.org/), например, [RabbitMQ](http://www.rabbitmq.com/) или [Redis](http://redis.io/). Его достаточно просто установить, конфигурация по-умолчанию уже работает. Так же вы, возможно, захотите хранить твиты в какой-нибудь приличной СУБД (а не SQLite).
+Для работы вам потребуется какой-нибудь брокер сообщений, совместимый с [Celery](http://www.celeryproject.org/), например, [RabbitMQ](http://www.rabbitmq.com/). После установки создаём в нём виртуальный хост:
+```bash
+rabbitmqctl add_vhost twitter_overkill
+rabbitmqctl set_permissions -p twitter_overkill guest ".*" ".*" ".*"
+```
+
+Так же вы, возможно, захотите хранить твиты в какой-нибудь приличной СУБД (а не SQLite).
 
 Теперь просто создаём файл конфигурации (в `~/.config/twitter-overkill.yaml` или `/etc/twitter-overkill.yaml`):
 ```yaml
 celery:
-    BROKER_URL: amqp://
+    BROKER_URL: amqp:///twitter_overkill
 
 db: mysql://root@localhost/twitter_overkill?charset=utf8
 
@@ -76,6 +82,7 @@ access_token_secret:
 
 description "twitter-overkill"
 
+env NODE_PATH=/home/themylogin/node_modules
 env PYTHON_HOME=/home/themylogin/www/apps/virtualenv
 
 start on runlevel [2345]
@@ -84,7 +91,7 @@ stop on runlevel [!2345]
 setuid themylogin
 setgid themylogin
 
-exec $PYTHON_HOME/bin/celery -A twitter_overkill worker
+exec $PYTHON_HOME/bin/celery -A twitter_overkill worker --loglevel=info
 
 respawn
 respawn limit 10 5
