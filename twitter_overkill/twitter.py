@@ -25,6 +25,7 @@ def post_tweet(auth_list, tweet_variants, db_id=None):
         db_tweet.auth_list = auth_list
         db_tweet.tweet_variants = tweet_variants
 
+        if_error_repeat_after = 60
         try:
             try:
                 db_tweet.user = api.VerifyCredentials().screen_name
@@ -46,6 +47,9 @@ def post_tweet(auth_list, tweet_variants, db_id=None):
                     db_tweet.state = "permanent-error"
                     db_tweet.state_data = repr(e)
                 else:
+                    if e.args[0][0]["code"] == 88: # Rate limit exceeded
+                        if_error_repeat_after = 900
+
                     raise
 
         except Exception as e:
@@ -56,7 +60,7 @@ def post_tweet(auth_list, tweet_variants, db_id=None):
         db.update_tweet(connection, db_tweet)
 
         if db_tweet.state == "temporary-error":
-            post_tweet.apply_async((auth_list, tweet_variants, db_tweet.id), countdown=60)
+            post_tweet.apply_async((auth_list, tweet_variants, db_tweet.id), countdown=if_error_repeat_after)
 
 
 def choose_tweet_variant(tweet_variants):
