@@ -9,7 +9,8 @@ from twitter_overkill.config import config
 import twitter_overkill.db as db
 from twitter_overkill.twitter_text import get_tweet_length
 
-@celery.task
+
+@celery.task(acks_late=True)
 def post_tweet(auth_list, tweet_variants, db_id=None):
     with db.get_connection() as connection:
         api = twitter.Api(*auth_list)
