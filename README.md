@@ -52,17 +52,22 @@ PORT=127.0.0.1:52003 docker-compose up
 ```
 
 Теперь можно просто твитить:
+```bash
+pip install "https://github.com/themylogin/twitter-overkill/zipball/master#egg=twitter-overkill[client]"
+```
+
 ```python
 import twitter
-from twitter_overkill import tweet
+from twitter_overkill.client import TwitterOverkill
 api = twitter.Api(...)
-tweet(api, "Всем привет! Меня зовут Вова.")
-tweet(api, ["Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
-            "God Is An Astronaut, Mogwai, Joy Wants Eternity и This Will Destroy You.",
-             
-            "Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
-            "God Is An Astronaut, Mogwai и Joy Wants Eternity.",
-             
-            "Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
-            "God Is An Astronaut и Mogwai.",])
+twitter_overkill = TwitterOverkill("http://127.0.0.1:52003")
+twitter_overkill.tweet(api, "Всем привет! Меня зовут Вова.")
+twitter_overkill.tweet(api, ["Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
+                             "God Is An Astronaut, Mogwai, Joy Wants Eternity и This Will Destroy You.",
+
+                             "Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
+                             "God Is An Astronaut, Mogwai и Joy Wants Eternity.",
+
+                             "Всем привет! Меня зовут Вова. Я люблю слушать Godspeed You! Black Emperor, " +
+                             "God Is An Astronaut и Mogwai.",])
 ```
