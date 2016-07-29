@@ -10,8 +10,6 @@ RUN apt-get -y install python3 \
                        python3-pip \
                        python3-virtualenv
 
-RUN apt-get -y install python3-numpy
-
 RUN apt-get -y install libpq-dev
 
 RUN python3 -m virtualenv --python=python3 /virtualenv

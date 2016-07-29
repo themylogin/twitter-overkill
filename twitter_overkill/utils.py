@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import itertools
-import numpy
 import operator
+import statistics
 
 
 def join_list(l, separator=", ", last_separator=" и "):
@@ -72,8 +72,8 @@ def tweet_with_lists(tweet_variants, lists, *args, **kwargs):
         2. Из твитов с одинаковой суммой количеств элементов список выбираем тот, где количества элементов более
         сбалансированы (например, [1, 1] лучше, чем [2, 0])
         """
-        std1 = numpy.std(counts1)
-        std2 = numpy.std(counts2)
+        std1 = statistics.stdev(counts1)
+        std2 = statistics.stdev(counts2)
         if std1 < std2:
             return -1
         elif std2 < std1:

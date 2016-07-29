@@ -6,6 +6,7 @@ setup(
     extras_require={
         "client": [
             "requests",
+            "statistics",
         ],
         "server": [
             "celery==3.1.23",
@@ -17,6 +18,7 @@ setup(
             "python-twitter==3.1",
             "requests==2.10.0",
             "SQLAlchemy-Enum34==1.0.1",
+            "statistics==1.0.3.5",
             "voluptuous==0.8.11",
         ],
         "tests": [
