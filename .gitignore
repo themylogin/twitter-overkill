@@ -39,4 +39,4 @@ nosetests.xml
 .idea
 
 # Configuration file
-env
+.env
