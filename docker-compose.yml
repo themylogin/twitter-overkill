@@ -4,7 +4,7 @@ services:
   api:
     build: .
     command: /virtualenv/bin/python -m twitter_overkill
-    env_file: env
+    env_file: .env
     links:
       - postgres
       - rabbitmq
@@ -15,7 +15,7 @@ services:
   worker:
     build: .
     command: /virtualenv/bin/celery worker -A twitter_overkill.worker:celery -l INFO
-    env_file: env
+    env_file: .env
     environment:
       C_FORCE_ROOT: "yes"
       NODE_PATH: "/usr/local/lib/node_modules"

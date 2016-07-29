@@ -43,12 +43,16 @@ api_wrapper.tweet(["Всем привет! Меня зовут Вова. Я лю
 ---------
 
 ```bash
-cp env.example env
-$EDITOR env
+cp .env.example .env
+$EDITOR .env
+docker-compose build
+```
 
-PORT=127.0.0.1:52003 docker-compose build
+Запуск
+------
 
-PORT=127.0.0.1:52003 docker-compose up
+```bash
+docker-compose up
 ```
 
 Теперь можно просто твитить:
