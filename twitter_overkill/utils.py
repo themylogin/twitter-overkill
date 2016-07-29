@@ -5,7 +5,7 @@ import operator
 import statistics
 
 
-def join_list(l, separator=", ", last_separator=" и "):
+def join_list(l, separator=u", ", last_separator=u" и "):
     if len(l) == 0:
         return ""
 
