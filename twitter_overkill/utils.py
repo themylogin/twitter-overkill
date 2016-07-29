@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, unicode_literals
 
 import itertools
 import numpy
@@ -59,7 +58,10 @@ def tweet_with_lists(tweet_variants, lists, *args, **kwargs):
     отправляем его без единого элемента первого списка, зато с двумя элементами второго. Поэтому отсортируем твиты,
     сравнивая их следующим образом:
     """
-    def cmp((tweet1, counts1), (tweet2, counts2)):
+    def cmp(tweet1_counts1, tweet2_counts2):
+        (tweet1, counts1) = tweet1_counts1
+        (tweet2, counts2) = tweet2_counts2
+
         "1. Из твитов с разным количеством элементов списков более информативен тот, в котором элементов больше"
         if sum(counts1) > sum(counts2):
             return -1

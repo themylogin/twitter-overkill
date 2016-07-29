@@ -1,0 +1,44 @@
+version: "2"
+
+services:
+  api:
+    build: .
+    command: /virtualenv/bin/python -m twitter_overkill
+    env_file: env
+    links:
+      - postgres
+      - rabbitmq
+    ports:
+      - "${PORT}:80"
+    restart: always
+
+  worker:
+    build: .
+    command: /virtualenv/bin/celery worker -A twitter_overkill.worker:celery -l INFO
+    env_file: env
+    environment:
+      C_FORCE_ROOT: "yes"
+      NODE_PATH: "/usr/local/lib/node_modules"
+    links:
+      - postgres
+      - rabbitmq
+    restart: always
+
+  postgres:
+    image: postgres:9.5.3
+    environment:
+      LC_ALL: C.UTF-8
+      POSTGRES_DB: twitter_overkill
+      POSTGRES_USER: twitter_overkill
+      POSTGRES_PASSWORD: twitter_overkill
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+  rabbitmq:
+    image: rabbitmq:3.6.3
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
