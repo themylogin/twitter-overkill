@@ -32,7 +32,7 @@ services:
       POSTGRES_USER: twitter_overkill
       POSTGRES_PASSWORD: twitter_overkill
     volumes:
-      - postgres-data:/var/lib/postgresql
+      - postgres-data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3.6.3
